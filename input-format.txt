@@ -1,0 +1,20 @@
+-------FORMAT----------
+
+{ STATE(number) } collection report on {DATE}
+{ type } --- = { members }{ / | - | = | . | , }{ Amount }{ / | - | = | . | , }{ Recovery } 
+
+-------END FORMAT------
+
+type = { NBFC | SBI | SBI ADV | SIDBI | PRAYAAS | PRAYAAS ADV | BC | ANANYA }
+
+[type]        -> [row], [column]
+NBFC          -> NBFC, NBFC 
+ANANYA        -> ANANYA, NBFC
+SBI           -> SBI, SBI
+SBI ADV       -> SBI ADV, SBI
+SIDBI         -> PRAYAAS/SIDBI, PRAYAAS
+PRAYAAS       -> PRAYAAS, PRAYAAS
+PRAYAAS ADV   -> PRAYAAS ADV, PRAYAAS
+BC            -> BC, NBFC
+
+row_name = {STATE} {number} {TYPE}
