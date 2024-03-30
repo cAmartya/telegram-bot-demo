@@ -31,8 +31,25 @@
 
 # print(state_name, state_idx)
 
-from datetime import date
+# from datetime import date
 
-today = date.today()
-d1 = today.strftime("%d/%m/%Y")
-print("d1 =", d1)
+# today = date.today()
+# d1 = today.strftime("%d/%m/%Y")
+# print("d1 =", d1)
+
+import re
+# s1 = "[27/03, 23:09] Some(more): bihar \n ========== \n nbfc = gg\n======\n"
+# s2 = "bihar"
+# pattern = r'\[[^\]]*\]\s[^\:]*:\s*'
+
+# s1 = re.sub(r'==+', "#", s1)
+# print(re.sub(pattern=pattern, string=s1, repl=""))
+# print(re.sub(pattern=pattern, string=s2, repl=""))
+
+line = "bd collection 999/77"
+line = "bd collection= 999/77"
+t = re.split("=|-|:|;|>|collection", maxsplit=1, string=line)
+
+print(t)
+
+print(re.findall("\w+", t[1]))

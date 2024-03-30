@@ -23,9 +23,9 @@ class Driver:
     first_line = lines.pop(0)
     first_line_items = re.findall(r"\w*\d*", first_line)
     first_line_items = [items for items in first_line_items if len(items)>0]
-    print(first_line_items)
+    # print(first_line_items)
     
-    # TODO: improve row_prefix, support for west bengal
+    # TODO: improve row_prefix, support for west bengal --done
     state_name = ""
     state_idx = ""
     if(first_line_items[-1].isdigit()):
@@ -39,8 +39,8 @@ class Driver:
     # row_prefix = self.shorthand["BIHAR"]
     print(row_prefix)
     for line in lines:
-      groups = re.split("=|-|:|;|>", maxsplit=1, string=line)
-      print(groups)
+      groups = re.split("=|-|:|;|>|collection", maxsplit=1, string=line)
+      # print(groups)
       bank_type = ""
       # lhs_split = groups[0].split() 
       lhs_split = re.findall("\w+", groups[0])
@@ -174,10 +174,12 @@ class Driver:
     self.fill_header_cells()
     
       # to maintain order
+    print("\n\n@@@@@@@@@@@@@@@@@\nDRIVER", blocks)
     blocks.sort()
     # fill the table
     for element in blocks:
-      self.extract_items(element)
+      if len(element)>0:
+        self.extract_items(element)
     
     self.fill_total_cells()
     self.fill_write_off()
@@ -188,7 +190,7 @@ class Driver:
 def entry_point():
   driver = Driver()
   blocks = []
-  with open("./input.txt", "r") as f:
+  with open("./tmp.txt", "r") as f:
     text = f.read()
     terminal = "#"
     for t in text.split(terminal):

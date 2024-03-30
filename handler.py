@@ -45,12 +45,13 @@ class Driver:
       # lhs_split = groups[0].split() 
       lhs_split = re.findall("\w+", groups[0])
       for ele in lhs_split:
-        if ele in self.placement:
-          bank_type = ele + (" ADV" if "ADV" in lhs_split else '')
+        element = ele.upper()
+        if element in self.placement:
+          bank_type = element + (" ADV" if "adv" in lhs_split else '')
           break
       
       if bank_type == "":
-        if "BD" in lhs_split:
+        if "bd" in lhs_split:
           items = re.findall("\w+", groups[1])
           self.write_off_amount += int(items[1] if len(items)>1 else 0)
           self.write_off_members += int(items[0])
@@ -187,14 +188,15 @@ class Driver:
 def entry_point():
   driver = Driver()
   blocks = []
-  with open("./input.txt", "r") as f:
+  with open("./tmp.txt", "r") as f:
     text = f.read()
     terminal = "#"
     for t in text.split(terminal):
       if len(t)>0:
-        blocks.append(t.strip())
+        blocks.append(t.strip().lower())
 
   driver.extract(blocks)
   pass
 
-# entry_point()
+if __name__ == "__main__":
+  entry_point()

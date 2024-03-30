@@ -1,8 +1,8 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Application, MessageHandler, filters
 
-import os
-from handler import Driver
+import os, re
+from try_handler import Driver
 
 from dotenv import load_dotenv
 
@@ -18,14 +18,17 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
   await update.message.reply_text(f'Hello {update.effective_user.first_name}, you can send the reports now.')
 
 async def end_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-  print("recieved till now", text)
+  print("recieved till now", len(text),text)
+
+  with open("./tmp.txt", "w") as f:
+    f.write('#'.join(text))
+
   await update.message.reply_text(f'preparing report')
-  # time.sleep(1)
+  # driver.extract(text)
   try:
     driver.extract(text)
   except Exception as e:
     print(e)
-  
   with open("./try.xlsx", "rb") as f:
     await update.message.reply_document(document=f)
   await update.message.reply_text(f'thank you')
@@ -33,11 +36,17 @@ async def end_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
   msg_type = update.message.chat.type
   msg_txt = update.message.text
-  # text.append(msg_txt)
   terminal = "#"
-  for t in msg_txt.split(terminal):
-    if len(t)>0:
-      text.append(t.strip().lower())
+  # replace `=======` with "#" 
+  msg_txt = re.sub(r'==+', terminal, msg_txt)
+  for msg_block in msg_txt.split(terminal):
+    if len(msg_block)>0:
+      cleaned_block = msg_block.replace("*", " ").strip().lower()
+      # remove whatsapp timestamp
+      cleaned_block = re.sub(r'\[[^\]]*\]\s[^\:]*:\s*', "#", cleaned_block)
+      for item in cleaned_block.split(terminal):
+        if len(item)>0:
+          text.append(item)
 
   print(f"user: {update.effective_user.first_name}, {update.message.chat.id} in {msg_type}: {msg_txt}")
 
