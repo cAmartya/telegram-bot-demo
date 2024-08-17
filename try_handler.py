@@ -21,20 +21,16 @@ class Driver:
   def extract_items(self, text:str):
     lines = text.split("\n")
     first_line = lines.pop(0)
-    first_line_items = re.findall(r"\w*\d*", first_line)
-    first_line_items = [items for items in first_line_items if len(items)>0]
-    # print(first_line_items)
-    
-    # TODO: improve row_prefix, support for west bengal --done
-    state_name = ""
-    state_idx = ""
-    if(first_line_items[-1].isdigit()):
-      state_name = ' '.join(first_line_items[:-1])
-      state_idx = first_line_items[-1]
-    else:
-      state_name = ' '.join(first_line_items)
-    
-    row_prefix = self.shorthand[state_name.upper()] + ' ' + state_idx
+    first_line = first_line.upper()
+    first_line = re.sub(r"\d+\W\d+\W\d+", "", first_line)
+
+    state_shorthand = ""
+    for state_name in self.shorthand.keys():
+      if state_name in first_line:
+        state_shorthand = self.shorthand[state_name]
+        break
+
+    row_prefix = state_shorthand + ' ' + re.findall(r"\d+", first_line)[0]
 
     # row_prefix = self.shorthand["BIHAR"]
     print(row_prefix)

@@ -184,6 +184,7 @@ class Driver:
     print("END, saving...")
     
     self.wb.save("try.xlsx")
+    print("W/O", self.write_off_members, self.write_off_amount)
 
 def entry_point():
   driver = Driver()
@@ -196,6 +197,7 @@ def entry_point():
         blocks.append(t.strip().lower())
 
   driver.extract(blocks)
+
   pass
 
 if __name__ == "__main__":
